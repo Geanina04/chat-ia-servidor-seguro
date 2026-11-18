@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Administración - Chat IA</title>
+</head>
+<body>
+    <h1>Panel de administración</h1>
+
+    <p>Bienvenida, administradora Nina.</p>
+
+    {% with messages = get_flashed_messages() %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endwith %}
+
+    <h2>Usuarios registrados</h2>
+
+    <table border="1" cellpadding="8">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Usuario</th>
+                <th>Rol</th>
+                <th>Estado</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.role }}</td>
+                <td>
+                    {% if user.active %}
+                        Activo
+                    {% else %}
+                        Bloqueado
+                    {% endif %}
+                </td>
+                <td>
+                    {% if user.role != 'admin' %}
+                    <form method="POST"
+                          action="{{ url_for('toggle_user', user_id=user.id) }}">
+
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                        <button type="submit">
+                            {% if user.active %}
+                                Bloquear
+                            {% else %}
+                                Desbloquear
+                            {% endif %}
+                        </button>
+                    </form>
+                    {% else %}
+                        Administrador protegido
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p><a href="/dashboard">Volver al panel principal</a></p>
+    <p><a href="/logout">Cerrar sesión</a></p>
+</body>
+</html>

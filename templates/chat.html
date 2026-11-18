@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Chat con IA</title>
+</head>
+<body>
+
+    <h1>Chat con inteligencia artificial</h1>
+
+    <p>Bienvenida, {{ session.username }}.</p>
+
+    <h2>Mis conversaciones</h2>
+
+    <p>
+        <a href="{{ url_for('chat') }}">Nueva conversación</a>
+    </p>
+
+    <ul>
+        {% for conversacion in conversaciones %}
+            <li>
+                <a href="{{ url_for('chat', conversation_id=conversacion.id) }}">
+                    {{ conversacion.title }}
+                </a>
+            </li>
+        {% else %}
+            <li>Aún no tienes conversaciones.</li>
+        {% endfor %}
+    </ul>
+
+    <hr>
+
+    <h2>Mensajes</h2>
+
+    {% for mensaje in mensajes %}
+        {% if mensaje.role == 'user' %}
+            <p><strong>Tú:</strong></p>
+        {% else %}
+            <p><strong>Inteligencia artificial:</strong></p>
+        {% endif %}
+
+        <p>{{ mensaje.content }}</p>
+    {% else %}
+        <p>Selecciona una conversación o inicia una nueva.</p>
+    {% endfor %}
+
+    <hr>
+
+    <h2>Escribe tu pregunta</h2>
+
+    <form method="POST"
+          action="{{ url_for('chat', conversation_id=conversation_id) if conversation_id else url_for('chat') }}">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <textarea
+            name="message"
+            rows="5"
+            cols="50"
+            maxlength="4000"
+            placeholder="Escribe tu pregunta..."
+            required
+        ></textarea>
+
+        <br>
+
+        <button type="submit">Enviar pregunta</button>
+    </form>
+
+    <p><a href="/dashboard">Volver al panel principal</a></p>
+
+</body>
+</html>

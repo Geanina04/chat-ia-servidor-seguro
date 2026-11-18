@@ -1,0 +1,31 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro - Chat IA</title>
+</head>
+<body>
+    <h1>Crear cuenta</h1>
+
+    {% with messages = get_flashed_messages() %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endwith %}
+
+    <form method="POST">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <label>Nombre de usuario:</label>
+        <input type="text" name="username" required>
+
+        <label>Contraseña:</label>
+        <input type="password" name="password" minlength="12" required>
+
+        <button type="submit">Registrarse</button>
+    </form>
+
+    <a href="/login">Volver al inicio de sesión</a>
+</body>
+</html>
